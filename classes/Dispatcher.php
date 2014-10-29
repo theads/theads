@@ -13,6 +13,8 @@ final class Dispatcher {
     
     protected function __construct() {
         $this->use_routes = (bool)Configuration::get(TA_USE_REWRITE);
+        Router::resolve()->process();
+        
         Debug::show(Configuration::getInstance());
     }
     

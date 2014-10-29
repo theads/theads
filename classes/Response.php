@@ -12,6 +12,8 @@ final class Response {
 
     private $headers = array();
     
+    private $debug = array();
+    
     /**
      * 
      * @return Response
@@ -27,6 +29,21 @@ final class Response {
         self::getInstace()->setHeader($name, $value);
     }
 
+    public function addDebug($info) {
+        $record = array(
+            'callstack' => array(),
+            'value' => $info
+        );
+        $db = array_reverse (debug_backtrace());
+        if(!empty($db)) {
+            foreach($db as $k => $v) {
+                if($v['class'] != 'Response' && $v['function'] != 'addDebug') {
+                    $record['callstack'][] = $v;
+                }
+            }
+        }
+        $this->debug[] = $record;
+    }
 
     protected function __construct() {
         $this->initSmarty();
@@ -65,6 +82,8 @@ final class Response {
             $this->headers();
             $this->smarty->assign('config', array(
                 'media_server' => Configuration::get(TA_MEDIA_SERVER)?Configuration::get(TA_MEDIA_SERVER):'http://localhost/theads',
+                'show_debug' => (TA_MODE == TA_MODE_DEV)?true:false,
+                'debug' => (TA_MODE == TA_MODE_DEV)?$this->debug:array()
             ));
             $this->smarty->setTemplateDir(TA_THEMES_DIR .Configuration::get(TA_TEMPLATE_NAME) . TA_DS);
             echo $this->smarty->display('index.tpl');

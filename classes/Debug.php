@@ -21,9 +21,7 @@ final class Debug {
     
     public static function show($item) {
         if(TA_MODE != TA_MODE_PROD) {
-            echo '<pre>';
-            echo self::debugMethod($item);
-            echo '</pre>';
+            Response::getInstace()->addDebug(self::debugMethod($item));
         }
     }
     

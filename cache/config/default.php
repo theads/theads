@@ -8,5 +8,7 @@ return array(
     'template_name' => 'default',
     'timezone' => 'Europe/Warsaw',
     'media_server' => false,
+    'default_modules' => array(),
+    'modules' => array()
 );
 
